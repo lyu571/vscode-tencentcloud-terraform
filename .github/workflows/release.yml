@@ -18,10 +18,36 @@ jobs:
               run: |
                   npm install
                   npm install -g vsce
+            - name: Set Git identity
+              run: |
+                  git config user.email "nickyinluo@tencent.com"
+                  git config user.name "nickyinluo"
             - name: Publish to vs marketplace
               if: success()
               run: |
-                  vsce package
-                  vsce publish
+                  vsce package --no-yarn
+                  vsce publish patch --no-yarn
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+            - name: Get Current Version
+              id: vscode-ext-pkg-ver
+              uses: martinbeentjes/npm-get-version-action@v1.3.1
+            - name: Upload Package as pre-publish
+              uses: "marvinpinto/action-automatic-releases@latest"
+              with:
+                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
+                  automatic_release_tag: ${{ steps.vscode-ext-pkg-ver.outputs.current-version}}
+                  prerelease: true
+                  title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
+                  files: |
+                      vscode-tencentcloud-terraform-*.vsix
+            - name: Update Tags.
+              run: |
+                  git commit -am "set v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
+                  git push
+    update-tag:
+        if: success()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
