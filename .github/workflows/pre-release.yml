@@ -31,7 +31,7 @@ jobs:
         if: runner.os != 'Linux'
       - name: Package extension
         if: success()
-        run: npm run package.local
+        run: npm run package.patch
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Get Current Version
