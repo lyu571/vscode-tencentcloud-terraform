@@ -29,8 +29,17 @@ jobs:
           run: xvfb-run -a npm test
       - run: npm test
         if: runner.os != 'Linux'
-      - name: Pre release on local
+      - name: Package extension
         if: success()
         run: npm run package.local
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+      - name: Upload Package as pre-publish
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "VS Code Extension Build"
+          files: |
+            vscode-tencentcloud-terraform-*.vsix
