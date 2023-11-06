@@ -18,7 +18,7 @@ jobs:
             - run: npm ci
             - name: Publish to VS Marketplace
               if: success()
-              uses: HaaLeo/publish-vscode-extension@latest
+              uses: HaaLeo/publish-vscode-extension@v1
               with:
                 pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
                 registryUrl: https://marketplace.visualstudio.com
