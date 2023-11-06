@@ -34,12 +34,15 @@ jobs:
         run: npm run package.local
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+      - name: Get Current Version
+        id: vscode-ext-pkg-ver
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
       - name: Upload Package as pre-publish
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: ${{ steps.vscode-ext-pkg-ver.outputs.current-version}}
           prerelease: true
-          title: "VS Code Extension Build"
+          title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
           files: |
             vscode-tencentcloud-terraform-*.vsix
