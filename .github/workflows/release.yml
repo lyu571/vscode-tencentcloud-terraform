@@ -26,8 +26,12 @@ jobs:
             - name: Publish to vs marketplace
               if: success()
               run: |
+                  echo "env:${{ secrets.VS_MARKETPLACE_TOKEN }}" 
+                  echo "VSCE_PAT:$VSCE_PAT"
                   vsce package --no-yarn 
-                  vsce publish patch --no-yarn -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
+                  vsce publish patch --no-yarn
+              env:
+                  VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
