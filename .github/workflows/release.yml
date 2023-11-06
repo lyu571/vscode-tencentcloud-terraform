@@ -26,7 +26,8 @@ jobs:
             - name: Publish to VS Marketplace
               if: success()
               run: |
-                  npm run release.patch
+                  npm run package.patch
+                  npm run release.current
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
 
