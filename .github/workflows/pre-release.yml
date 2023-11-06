@@ -4,7 +4,9 @@ on:
     types:
       - opened
     paths:
-      - '.github/**'
+      - '**.yml'
+      - 'src/**'
+      - 'config/**'
   push:
     tags:
       - v*
