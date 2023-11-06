@@ -43,3 +43,9 @@ jobs:
               run: |
                   git commit -am "set v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
                   git push
+    update-tag:
+        if: success()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
