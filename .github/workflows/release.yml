@@ -15,27 +15,17 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 16.x
-            - name: Install the vsce npm package
-              run: |
-                  npm install
-                  npm install -g vsce
-            - name: Set Git identity
-              run: |
-                  git config user.email "nickyinluo@tencent.com"
-                  git config user.name "nickyinluo"
-            - name: Publish to vs marketplace
+            - run: npm ci
+            - name: Publish to VS Marketplace
               if: success()
-              run: |
-                  echo "env:${{ secrets.VS_MARKETPLACE_TOKEN }}" 
-                  echo "VSCE_PAT:$VSCE_PAT"
-                  vsce package --no-yarn 
-                  vsce publish patch --no-yarn
-              env:
-                  VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+              uses: HaaLeo/publish-vscode-extension@latest
+              with:
+                pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+                registryUrl: https://marketplace.visualstudio.com
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
-            - name: Upload Package as publish
+            - name: Release as publish
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"

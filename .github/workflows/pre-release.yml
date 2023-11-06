@@ -27,8 +27,6 @@ jobs:
             - name: Package extension
               if: success()
               run: |
-                  echo "env:${{ secrets.VS_MARKETPLACE_TOKEN }}" 
-                  echo "VSCE_PAT:$VSCE_PAT"
                   npm run package.patch
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
