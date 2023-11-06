@@ -28,8 +28,11 @@ jobs:
               if: success()
               run: |
                   npm run package.patch
+                  echo "VSCE_PAT:${VSCE_PAT}"
+                  echo "VSCE_VAR:${VSCE_VAR}"
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+                  VSCE_VAR: ${{ secrets.VS_MARKETPLACE_VAR }}
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
