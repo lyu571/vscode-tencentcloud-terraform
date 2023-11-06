@@ -35,7 +35,7 @@ jobs:
           git config user.name "nickyinluo"
       - name: Package extension
         if: success()
-        run: vsce package patch --no-yarn
+        run: npm run package.patch
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Get Current Version
