@@ -8,6 +8,7 @@ permissions: write-all
 jobs:
     release:
         runs-on: ubuntu-latest
+        environment: TOKEN_VSCODE
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -16,12 +17,16 @@ jobs:
               with:
                   node-version: 16.x
             - run: npm ci
+            - name: verfiy secrets
+              run: |
+                  echo "VS_MARKETPLACE_TOKEN:${{ secrets.VS_MARKETPLACE_TOKEN }}"
+                  echo "VS_MARKETPLACE_VAR:${{ secrets.VS_MARKETPLACE_VAR }}"
             - name: Publish to VS Marketplace
               if: success()
               uses: HaaLeo/publish-vscode-extension@v1
               with:
-                pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-                registryUrl: https://marketplace.visualstudio.com
+                  pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+                  registryUrl: https://marketplace.visualstudio.com
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
