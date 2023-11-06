@@ -3,11 +3,11 @@ on:
     pull_request:
         types:
             - closed
-permissions: write-all
 
 jobs:
     build:
         if: github.event.pull_request.merged == true
+        permissions: write-all
         runs-on: ubuntu-latest
         environment: TOKEN_VSCODE
         steps:
@@ -17,27 +17,25 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 16.x
-            - name: Install the vsce npm package
-              run: |
-                  npm install
-                  npm install -g vsce
+            - run: npm ci
+
             - name: Set Git identity
               run: |
                   git config user.email "nickyinluo@tencent.com"
                   git config user.name "nickyinluo"
+
             - name: Package extension
               if: success()
               run: |
                   npm run package.patch
-                  echo "VSCE_PAT:${VSCE_PAT}"
-                  echo "VSCE_VAR:${VSCE_VAR}"
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-                  VSCE_VAR: ${{ secrets.VS_MARKETPLACE_VAR }}
+
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
-            - name: Release as pre-publish
+
+            - name: Pre-release to Github
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
