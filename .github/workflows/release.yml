@@ -3,34 +3,38 @@ on:
     release:
         types:
             - released
-permissions: write-all
 
 jobs:
     release:
+        permissions: write-all
         runs-on: ubuntu-latest
         environment: TOKEN_VSCODE
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v2
             - name: Install Node.js
               uses: actions/setup-node@v3
               with:
                   node-version: 16.x
             - run: npm ci
-            - name: verfiy secrets
+
+            - name: Set Git identity
               run: |
-                  echo "VS_MARKETPLACE_TOKEN:${{ secrets.VS_MARKETPLACE_TOKEN }}"
-                  echo "VS_MARKETPLACE_VAR:${{ secrets.VS_MARKETPLACE_VAR }}"
+                  git config user.email "nickyinluo@tencent.com"
+                  git config user.name "nickyinluo"
+
             - name: Publish to VS Marketplace
               if: success()
-              uses: HaaLeo/publish-vscode-extension@v1
-              with:
-                  pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-                  registryUrl: https://marketplace.visualstudio.com
+              run: |
+                  npm run release.patch
+              env:
+                  VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
-            - name: Release as publish
+
+            - name: Releaes to Github
               uses: "marvinpinto/action-automatic-releases@latest"
               with:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -39,7 +43,10 @@ jobs:
                   title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
                   files: |
                       vscode-tencentcloud-terraform-*.vsix
-            - name: Update Tags.
-              run: |
-                  git commit -am "set v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
-                  git push
+
+            - name: "Automated Version Bump"
+              uses: "phips28/gh-action-bump-version@master"
+              with:
+                  tag-prefix: "v"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
