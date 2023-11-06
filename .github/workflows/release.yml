@@ -22,6 +22,6 @@ jobs:
               if: success()
               run: |
                   vsce package
-                   vsce publish -p "${{ secrets.VS_MARKETPLACE_TOKEN }}"
+                  vsce publish
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
