@@ -1,12 +1,13 @@
 name: pre-release-test
 on:
     pull_request:
-        paths: 
-            - '**.yml'
+        paths:
+            - "**.yml"
 
 jobs:
     build:
-        permissions: write-all
+        permissions:
+            contents: write
         runs-on: ubuntu-latest
         environment: TOKEN_VSCODE
         steps:
@@ -33,19 +34,18 @@ jobs:
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
-
-            - name: Pre-release to Github
-              uses: "marvinpinto/action-automatic-releases@latest"
+            - name: "cat package.json"
+              run: cat ./package.json
+            - name: "Automated Version Bump"
+              id: version-bump
+              uses: "phips28/gh-action-bump-version@master"
               with:
-                  repo_token: "${{ secrets.GITHUB_TOKEN }}"
-                  automatic_release_tag: ${{ steps.vscode-ext-pkg-ver.outputs.current-version}}
-                  prerelease: true
-                  title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}-pre-release"
-                  files: |
-                      vscode-tencentcloud-terraform-*.vsix
-            - name: printf
-              run: |
-                  git tag -l
-                  git branch -a
-                  git diff
-                  git status
+                  tag-prefix: "v"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: "cat package.json"
+              run: cat ./package.json
+            - name: "Output Step"
+              env:
+                  NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
+              run: echo "new tag $NEW_TAG"
