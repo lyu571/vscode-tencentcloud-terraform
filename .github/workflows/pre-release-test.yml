@@ -30,7 +30,7 @@ jobs:
             - name: Package extension
               if: success()
               run: |
-                  npm run package.current
+                  npm run package.patch
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
 
