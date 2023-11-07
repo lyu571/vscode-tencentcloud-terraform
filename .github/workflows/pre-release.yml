@@ -36,7 +36,7 @@ jobs:
 
             - name: Set tags from label
               if: startsWith(github.ref, 'refs/heads/') || !startsWith(github.event.push.ref, 'refs/heads/')
-              run: ｜
+              run: |
                   echo "NEW_TAG=${{ steps.vscode-ext-pkg-ver.outputs.current-version}}" >> $GITHUB_ENV
                   echo "new tag [$NEW_TAG] from label will be set"
 
