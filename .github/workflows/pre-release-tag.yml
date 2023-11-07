@@ -12,7 +12,7 @@ on:
 
 jobs:
     pre-release-tag:
-        if: github.event.label.name == "tag"
+        if: ${{ github.event.label.name == 'pre-release' }}
         permissions:
             contents: write
         runs-on: ubuntu-latest
