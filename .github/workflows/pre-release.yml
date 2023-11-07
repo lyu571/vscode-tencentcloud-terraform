@@ -3,14 +3,13 @@ on:
     pull_request:
         types:
             - closed
-        tags:
-            - "v*"
     push:
         tags:
             - "v*"
 
 jobs:
     pre-release:
+        if: ${{ github.event.pull_request.labels.name == 'pre-release' }}
         permissions:
             contents: write
             pull-requests: write
