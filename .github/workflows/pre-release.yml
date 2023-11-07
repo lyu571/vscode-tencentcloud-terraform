@@ -3,11 +3,17 @@ on:
     pull_request:
         types:
             - closed
+        tags:
+            - "v*"
+    push:
+        tags:
+            - "v*"
 
 jobs:
-    build:
-        if: 1 == 2
-        permissions: write-all
+    pre-release:
+        permissions:
+            contents: write
+            pull-requests: write
         runs-on: ubuntu-latest
         environment: TOKEN_VSCODE
         steps:
@@ -27,7 +33,7 @@ jobs:
             - name: Package extension
               if: success()
               run: |
-                  npm run package.patch
+                  npm run package.current
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
 
@@ -41,6 +47,6 @@ jobs:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
                   automatic_release_tag: ${{ steps.vscode-ext-pkg-ver.outputs.current-version}}
                   prerelease: true
-                  title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
+                  title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}-beta"
                   files: |
                       vscode-tencentcloud-terraform-*.vsix
