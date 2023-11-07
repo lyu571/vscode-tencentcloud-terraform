@@ -1,0 +1,51 @@
+name: pre-release-test
+on:
+    pull_request:
+        paths:
+            - "**.yml"
+
+jobs:
+    build:
+        permissions:
+            contents: write
+        runs-on: ubuntu-latest
+        environment: TOKEN_VSCODE
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+            - run: npm ci
+
+            - name: Set Git identity
+              run: |
+                  git config user.email "nickyinluo@tencent.com"
+                  git config user.name "nickyinluo"
+
+            - name: Package extension
+              if: success()
+              run: |
+                  npm run package.patch
+              env:
+                  VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+
+            - name: Get Current Version
+              id: vscode-ext-pkg-ver
+              uses: martinbeentjes/npm-get-version-action@v1.3.1
+            - name: "cat package.json"
+              run: cat ./package.json
+            - name: "Automated Version Bump"
+              id: version-bump
+              uses: "phips28/gh-action-bump-version@master"
+              with:
+                  tag-prefix: "v"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: "cat package.json"
+              run: cat ./package.json
+            - name: "Output Step"
+              env:
+                  NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
+              run: echo "new tag $NEW_TAG"
