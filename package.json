@@ -236,7 +236,7 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "package.patch": "vsce package patch --no-yarn",
-        "package.local": "vsce package --no-yarn",
+        "package.current": "vsce package --no-yarn",
         "release.current": "vsce publish --no-yarn",
         "release.patch": "vsce publish patch --no-yarn",
         "pretest": "npm run compile && npm run lint",
