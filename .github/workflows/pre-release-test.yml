@@ -1,0 +1,33 @@
+name: pre-release-test
+on:
+    pull_request:
+        types:
+            - closed
+    push:
+        tags:
+            - "v*"
+
+jobs:
+    pre-release:
+        permissions:
+            contents: write
+            pull-requests: write
+        runs-on: ubuntu-latest
+        environment: TOKEN_VSCODE
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+            - run: echo "${{ github.event.label.name }}"
+            - run: echo "${{ github.event.pull_request.labels.name }}"
+            - run: echo "${{ github.event.pull_request.head.ref }}"
+            - run: echo "${{ github.event.pull_request.head.label }}"
+            - run: echo "${{ github.event.pull_request.head.sha }}"
+            - run: echo "${{ github.event.pull_request.base.ref }}"
+            - run: echo "${{ github.event.pull_request.base.label }}"
+            - run: echo "${{ github.event.pull_request.base.sha }}"
+
+            
