@@ -16,6 +16,9 @@ import { GitUtils } from './utils/gitUtils';
 import _ from 'lodash';
 
 const TF_MODE: vscode.DocumentFilter = { language: 'terraform', scheme: 'file' };
+export interface ExtArgs {
+    'xx': string;
+}
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
