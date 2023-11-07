@@ -47,6 +47,6 @@ jobs:
                   repo_token: "${{ secrets.GITHUB_TOKEN }}"
                   automatic_release_tag: ${{ steps.vscode-ext-pkg-ver.outputs.current-version}}
                   prerelease: true
-                  title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
+                  title: "v${{ steps.vscode-ext-pkg-ver.outputs.current-version}}-beta"
                   files: |
                       vscode-tencentcloud-terraform-*.vsix
