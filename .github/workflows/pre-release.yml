@@ -25,11 +25,10 @@ jobs:
 
             - name: Set tags from commit tag
               if: startsWith(github.ref, 'refs/tags/') || startsWith(github.event.push.ref, 'refs/tags/')
-              env:
-                  NEW_TAG: ${{ GITHUB_REF#refs/tags/ }}
-              run: ｜
-                echo "NEW_TAG=${{ GITHUB_REF#refs/tags/ }}" >> $GITHUB_ENV
-                echo "new tag[$NEW_TAG] from commit tag will be set"
+              run: |
+                    NEW_TAG=${GITHUB_REF#refs/tags/}
+                    echo "new tag[$NEW_TAG] from commit tag will be set"
+                    echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
             - name: Get Current Version
               id: vscode-ext-pkg-ver
