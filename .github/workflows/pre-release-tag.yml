@@ -47,5 +47,5 @@ jobs:
             - name: "Output NEW_TAG"
               env:
                   NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
-                  OLD_VER: ${{ steps.vscode-ext-pkg-ver.outputs.current-version}}
+                  OLD_VER: ${{ steps.vscode-ext-pkg-ver.outputs.current-version }}
               run: echo "new tag[$NEW_TAG], old version[$OLD_VER]"
