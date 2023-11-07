@@ -9,7 +9,7 @@ on:
 
 jobs:
     pre-release:
-        if: ${{ github.event.pull_request.labels.name == 'pre-release' }}
+        if: ${{ github.event.label.name == 'pre-release' }}
         permissions:
             contents: write
             pull-requests: write
