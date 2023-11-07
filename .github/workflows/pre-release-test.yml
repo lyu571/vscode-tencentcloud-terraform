@@ -3,9 +3,12 @@ on:
     pull_request:
         paths:
             - "**.yml"
+        types:
+            - closed
 
 jobs:
     build:
+        if: github.event.pull_request.merged == true
         permissions:
             contents: write
         runs-on: ubuntu-latest
@@ -27,13 +30,14 @@ jobs:
             - name: Package extension
               if: success()
               run: |
-                  npm run package.patch
+                  npm run package.current
               env:
                   VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
 
             - name: Get Current Version
               id: vscode-ext-pkg-ver
               uses: martinbeentjes/npm-get-version-action@v1.3.1
+            - run: echo "current-version:${{ steps.vscode-ext-pkg-ver.outputs.current-version}}"
             - name: "cat package.json"
               run: cat ./package.json
             - name: "Automated Version Bump"
@@ -41,6 +45,7 @@ jobs:
               uses: "phips28/gh-action-bump-version@master"
               with:
                   tag-prefix: "v"
+                  default: prerelease
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: "cat package.json"
